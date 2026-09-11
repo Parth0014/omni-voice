@@ -12,7 +12,7 @@ import numpy as np
 import soundfile as sf
 from scipy.signal import resample_poly
 
-DEFAULT_URL = "https://755352763c878e5bc1.gradio.live"
+DEFAULT_URL = "https://78da73c8566d66cb36.gradio.live"
 ATTRIBUTES = {
     "male", "female", "child", "teenager", "young adult", "middle-aged", "elderly",
     "very low pitch", "low pitch", "moderate pitch", "high pitch", "very high pitch", "whisper",

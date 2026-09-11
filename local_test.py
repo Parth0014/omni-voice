@@ -28,6 +28,7 @@ OPTION_FLAGS = {
     "endpoint": "--endpoint", "steps": "--steps", "guidance": "--guidance", "instruct": "--instruct",
     "pronunciation": "--pronunciation", "directions": "--directions", "max_chunks": "--max-chunks",
     "take": "--take", "engine": "--engine", "mastering": "--mastering",
+    "local_asr_model": "--local-asr-model",
     "verify_text": "--verify-text", "reference_manifest": "--reference-manifest",
 }
 

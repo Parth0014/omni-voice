@@ -363,6 +363,7 @@ def main(argv=None):
     parser.add_argument("--delivery", choices=("warm", "natural"), default=config["delivery"])
     parser.add_argument("--endpoint", default=config["endpoint"])
     parser.add_argument("--engine", choices=("gradio", "native"), default=environment.get("NARRATION_ENGINE", "gradio"))
+    parser.add_argument("--local-asr-model", type=Path, help="Downloaded faster-whisper model directory for local word checks")
     parser.add_argument("--normalize-text", action=argparse.BooleanOptionalAction, default=None)
     parser.add_argument("--verify-text", choices=("auto", "required", "off"), default=environment.get("NARRATION_VERIFY_TEXT", "auto"))
     parser.add_argument("--allow-auto-reference", action="store_true")
@@ -378,6 +379,7 @@ def main(argv=None):
     parser.add_argument("--steps", type=int, default=32)
     parser.add_argument("--guidance", type=float, default=2.0)
     parser.add_argument("--instruct", default="")
+    parser.add_argument("--denoise", action=argparse.BooleanOptionalAction, default=True)
     parser.add_argument("--pronunciation", type=Path, help="JSON mapping exact words to spoken forms or [CMU PHONEMES]")
     parser.add_argument("--directions", type=Path, help="JSON block-index mapping to pace/pause_after_ms")
     parser.add_argument("--max-chunks", type=int)
@@ -388,6 +390,13 @@ def main(argv=None):
     parser.add_argument("--output-dir", default=config["output_dir"])
     args = parser.parse_args(argv)
     options = vars(args)
+    local_asr_model = options.pop("local_asr_model")
+    if local_asr_model is not None and not options["plan_only"]:
+        from local_transcription import LocalTranscriptionEngine
+
+        backend = create_engine(options["engine"], endpoint=options["endpoint"],
+                                timeout=options["remote_timeout"], revision=options["model_revision"])
+        options["engine_instance"] = LocalTranscriptionEngine(backend, model_path=local_asr_model)
     if options["retake_chunks"] is not None:
         options["retake_chunks"] = [int(value) for value in options["retake_chunks"].split(",")]
     options["post_html_file"] = options.pop("html")

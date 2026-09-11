@@ -11,13 +11,10 @@ try {
     $candidates = @()
     if ($PythonPath) { $candidates += $PythonPath }
     if ($env:OMNIVOICE_PYTHON) { $candidates += $env:OMNIVOICE_PYTHON }
-    if ($env:CONDA_PREFIX) { $candidates += Join-Path $env:CONDA_PREFIX 'python.exe' }
     $candidates += @(
         (Join-Path $projectRoot '.venv\Scripts\python.exe'),
         (Join-Path $env:USERPROFILE 'miniconda3\envs\omnivoice\python.exe'),
-        (Join-Path $env:USERPROFILE 'anaconda3\envs\omnivoice\python.exe'),
-        (Join-Path $env:USERPROFILE 'miniconda3\envs\pockettts\python.exe'),
-        (Join-Path $env:USERPROFILE 'anaconda3\envs\pockettts\python.exe')
+        (Join-Path $env:USERPROFILE 'anaconda3\envs\omnivoice\python.exe')
     )
     $pathPython = Get-Command python -ErrorAction SilentlyContinue
     if ($pathPython) { $candidates += $pathPython.Source }

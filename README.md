@@ -23,6 +23,29 @@ Direct commands:
 .\.venv\Scripts\python.exe generate_narration.py
 ```
 
+To audition the same narration with several settings, copy
+`narration-variants.example.json`, adjust the variants, then run:
+
+```powershell
+.\.venv\Scripts\python.exe queue_narration.py `
+	--html sample.html `
+	--reference voice_samples/reference.wav `
+	--reference-text "The exact words spoken in the reference recording." `
+	--variants narration-variants.example.json
+```
+
+Each variant is saved in its own named folder under
+`output/narration-auditions`, with a WAV, report, HTML player and
+`configuration.json`. The queue writes `index.json` at the root and continues
+through the remaining variants if one fails. `--reference` can also point to a
+folder of WAV files; the queue then runs every variant for every reference and
+stores results as `reference-name/variant-name`. When batching a folder without
+`--reference-text`, the queue uses OmniVoice's optional automatic reference
+transcript mode. Variant fields can override
+`delivery`, `speed`, `steps`, `guidance`, `instruct`, `denoise`, `mastering`,
+`spectral_matching`, `normalize_text`, `verify_text`, `take`, `max_chunks`,
+`pronunciation` and `directions`; the last two may be JSON objects or file paths.
+
 The CLI reads `.env`; the one-click launcher reads `local-test.settings.json`. Keep the Colab session running. Both send the text and prepared reference audio to the configured public endpoint. Update `OMNIVOICE_URL` in `.env` (or `endpoint` in local settings) when Colab changes its share URL.
 
 The audition command creates six matched-volume examples: natural/32/guidance 2, warm/32/2, warm/48/2, warm/48/3, warm/64/2, warm/64/3. It does not choose a winner automatically. Each final generation saves a WAV, a JSON report and an HTML player with phrase navigation. The CLI defaults to `output/stories`; one-click runs use separate folders under `output/local-tests`.

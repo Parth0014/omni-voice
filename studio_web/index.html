@@ -1,0 +1,51 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>OmniVoice Studio</title><link rel="stylesheet" href="/styles.css"><script defer src="/app.js"></script></head>
+<body><div class="shell">
+<header><div class="brand"><span class="mark" aria-hidden="true">?</span><div>OMNIVOICE <span>STUDIO</span></div></div><span class="local-badge"><i></i> Local workspace</span></header>
+<section class="intro"><div><p class="eyebrow">A LITTLE MORE HUMAN</p><h1>Give your words a voice.</h1><p class="muted">Shape a thoughtful, expressive narration. Start with your words and a voice you love.</p></div><button id="loadSample" class="quiet">Try the sample story ?</button></section>
+<section class="connection card"><div class="connection-heading"><span class="step">?</span><div><h2>Colab connection</h2><p>One shared URL for every new generation. Change it whenever your runtime restarts.</p></div></div>
+<div class="connection-row"><label class="sr-only" for="endpoint">Global Colab URL</label><input id="endpoint" type="url" placeholder="https://your-session.gradio.live" autocomplete="off"><button id="saveConnection" class="secondary">Save URL</button><button id="testConnection" class="primary">Test connection</button></div><p id="connectionStatus" role="status" class="status">Connection not checked</p></section>
+<main>
+<div class="workspace">
+<section class="card passage"><div class="section-title"><div><p class="eyebrow">01 / THE WORDS</p><h2>Your passage</h2></div><select id="format" aria-label="Passage format"><option value="text">Plain text</option><option value="html">Ghost / HTML</option></select></div>
+<label class="sr-only" for="passage">Passage text</label><textarea id="passage" placeholder="Paste your story here.&#10;&#10;Leave a blank line between paragraphs.&#10;&#10;> Start quoted paragraphs with &gt; to use quote modes." spellcheck="true"></textarea>
+<div class="passage-footer"><span id="wordCount">0 words</span><span>Paragraphs guide the pacing.</span></div>
+<div class="row"><label>Quote handling<select id="quote_mode"><option value="preserve">Keep quotes ? same narrator</option><option value="exclude">Exclude quotes</option><option value="two_voice">Use a second voice for quotes</option></select></label><button id="previewPlan" class="secondary">Preview phrases</button></div>
+<details id="planDetails" hidden><summary>Planned phrases</summary><div id="plan"></div></details>
+</section>
+<section class="card voice"><div class="section-title"><div><p class="eyebrow">02 / THE VOICE</p><h2>Reference recording</h2></div><span class="pill">3?10 seconds</span></div>
+<p class="muted small">One clear speaker, in the same language as your passage. The reference performance guides the delivery.</p>
+<label class="upload" for="referenceFile"><span class="upload-icon">?</span><strong>Choose a voice recording</strong><span>WAV or FLAC ? up to 30 MB</span><input id="referenceFile" type="file" accept=".wav,.flac,audio/wav,audio/flac"></label>
+<p id="referenceStatus" class="small muted">No reference selected</p><audio id="referenceAudio" controls hidden></audio>
+<label>Exact reference transcript<textarea id="reference_text" rows="4" placeholder="Write exactly what the speaker says in the recording."></textarea></label>
+<div id="quoteVoice" hidden><hr><h3>Quote voice</h3><label class="file-label">Choose a different recording<input id="quoteFile" type="file" accept=".wav,.flac,audio/wav,audio/flac"></label><p id="quoteStatus" class="small muted">No quote voice selected</p><audio id="quoteAudio" controls hidden></audio><label>Exact quote-reference transcript<textarea id="quote_reference_text" rows="3"></textarea></label></div>
+</section></div>
+<section class="card settings"><div class="section-title"><div><p class="eyebrow">03 / THE DELIVERY</p><h2>Make it sound like you mean it.</h2></div><span class="pill">Your settings, saved locally</span></div>
+<div class="controls">
+<label>Delivery<select id="delivery"><option value="warm">Warm, intimate storytelling</option><option value="natural">Natural, even pacing</option></select><small>Warm adds gentle pace changes around quotes and endings.</small></label>
+<label>Inference steps<div class="range-line"><input id="steps" type="range" min="32" max="64" step="1"><output id="stepsValue">64</output></div><small>32?64. More steps take longer; they do not guarantee more emotion.</small></label>
+<label>Guidance<div class="range-line"><input id="guidance" type="range" min="0" max="4" step="0.1"><output id="guidanceValue">2.0</output></div><small>Start at 2. Try 3 when comparing adherence and voice character.</small></label>
+<label>Speaking speed<div class="range-line"><input id="speed" type="range" min="0.55" max="1.5" step="0.01"><output id="speedValue">1.00?</output></div><small>Native speech speed, before the delivery preset's adjustments.</small></label>
+<label>Mastering<select id="mastering"><option value="auto">Automatic ? balanced listening level</option><option value="natural">Natural ? gentle polish</option><option value="warm_story">Warm story ? tonal warmth</option><option value="gain">Volume adjustment only</option><option value="off">Off ? raw assembled audio</option></select><small>Applied after the speech is generated.</small></label>
+<label>Word checks<select id="verification"><option value="local">Local transcription ? required</option><option value="required">Endpoint transcription ? required</option><option value="auto">Endpoint transcription ? when available</option><option value="off">Off</option></select><small>Checks words and reference leakage, not emotional quality.</small></label>
+</div>
+<details class="advanced"><summary>Advanced voice & generation controls <span>Instructions, pronunciation, expressive beats and more</span></summary>
+<div class="controls">
+<label>Voice attributes<input id="instruct" placeholder="e.g. female, young adult" list="attributes"><datalist id="attributes"><option value="whisper"><option value="female"><option value="male"><option value="british accent"><option value="indian accent"></datalist><small>Comma-separated documented attributes. Free-form acting prompts are unsupported.</small></label>
+<label>Numeral normalization<select id="normalize_text"><option value="auto">Automatic ? use if supported</option><option value="on">On ? require endpoint support</option><option value="off">Off</option></select><small>The stock Colab demo does not expose this control.</small></label>
+<label>Take number<input id="take" type="number" min="0" step="1"><small>Increase for a fresh take. Same settings and take reuse cached speech.</small></label>
+<label>Request timeout (seconds)<input id="timeout" type="number" min="30" max="1800" step="30"><small>Allow more time for a cold Colab runtime.</small></label>
+<label class="check"><input id="denoise" type="checkbox"><span>Prompt denoising<small>May reduce noise from the voice reference.</small></span></label>
+<label class="check"><input id="spectral_matching" type="checkbox"><span>Reference spectral matching<small>Optional tonal correction. Review for voice fidelity.</small></span></label>
+<label class="wide">Pronunciation dictionary ? JSON<textarea id="pronunciation" rows="3" class="code" placeholder='{"gratitude": "[G R AE1 T AH0 T UW2 D]"}'></textarea><small>Whole-word replacements or CMU phonemes. Leave {} for no changes.</small></label>
+<label class="wide">Paragraph directions ? JSON<textarea id="directions" rows="3" class="code" placeholder='{"2": {"pace": 0.98, "pause_after_ms": 650, "before": "sigh"}}'></textarea><small>Use zero-based source block numbers from Preview phrases. Supported before/after tags are optional; none are inserted automatically.</small></label>
+</div></details>
+</section>
+<div class="actionbar"><div><strong>Ready when you are.</strong><p>Your passage and reference go to your Colab URL. Results stay on this computer.</p></div><div class="actions"><button id="saveSettings" class="secondary">Save settings</button><button id="generate" class="primary big">Generate narration <span>?</span></button></div></div>
+<p id="message" role="alert"></p>
+<section id="progressCard" class="card" hidden><div class="section-title"><h2 id="progressTitle">Creating your narration</h2><span id="progressCount"></span></div><progress id="progress" max="1" value="0"></progress><p id="progressText" class="muted">Connecting to Colab?</p><details><summary>Run log</summary><pre id="log"></pre></details></section>
+<section id="resultCard" class="card result" hidden><p class="eyebrow">READY TO LISTEN</p><h2>Your story, spoken.</h2><p id="resultInfo" class="muted"></p><audio id="resultAudio" controls></audio><div class="actions"><a id="download" class="primary" download>Download WAV</a><a id="playerLink" class="secondary" target="_blank" rel="noopener">Open phrase player ?</a><a id="reportLink" class="quiet" target="_blank" rel="noopener">Generation report</a></div><details><summary>Quality notes</summary><ul id="warnings"></ul></details></section>
+<section class="history"><div class="section-title"><h2>Recent narrations</h2><button id="refreshHistory" class="quiet">Refresh</button></div><div id="historyList" class="muted small">No narrations yet.</div></section>
+</main><footer>OMNIVOICE STUDIO <span>Made for thoughtful storytelling. Runs locally.</span></footer>
+</div></body></html>
