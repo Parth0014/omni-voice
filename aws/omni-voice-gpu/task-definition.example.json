@@ -1,0 +1,101 @@
+{
+  "family": "omni-voice-gpu-test",
+  "requiresCompatibilities": [
+    "EC2"
+  ],
+  "networkMode": "awsvpc",
+  "executionRoleArn": "<ECS_EXECUTION_ROLE_ARN>",
+  "taskRoleArn": "<GPU_WORKER_ROLE_ARN>",
+  "containerDefinitions": [
+    {
+      "name": "narration",
+      "image": "<ECR_IMAGE_URI>@sha256:<IMAGE_DIGEST>",
+      "essential": true,
+      "cpu": 4096,
+      "memory": 12288,
+      "resourceRequirements": [
+        {
+          "type": "GPU",
+          "value": "1"
+        }
+      ],
+      "environment": [
+        {
+          "name": "AWS_REGION",
+          "value": "us-east-1"
+        },
+        {
+          "name": "NARRATION_ENGINE",
+          "value": "native"
+        },
+        {
+          "name": "NARRATION_VERIFY_TEXT",
+          "value": "required"
+        },
+        {
+          "name": "OMNIVOICE_QUEUE_URL",
+          "value": "<DEDICATED_GPU_TEST_FIFO_URL>"
+        },
+        {
+          "name": "OMNIVOICE_MODEL_REVISION",
+          "value": "<HF_MODEL_COMMIT_SHA>"
+        },
+        {
+          "name": "OMNIVOICE_REFERENCE_MANIFEST",
+          "value": "/config/voice-transcripts.json"
+        },
+        {
+          "name": "OMNIVOICE_CACHE_DIR",
+          "value": "/cache/raw"
+        },
+        {
+          "name": "OMNIVOICE_REPORT_DIR",
+          "value": "/cache/reports"
+        },
+        {
+          "name": "HF_HOME",
+          "value": "/cache/huggingface"
+        },
+        {
+          "name": "STUDIO_STATUS_QUEUE_URL",
+          "value": "<DEV_STATUS_QUEUE_URL>"
+        }
+      ],
+      "mountPoints": [
+        {
+          "sourceVolume": "cache",
+          "containerPath": "/cache",
+          "readOnly": false
+        },
+        {
+          "sourceVolume": "config",
+          "containerPath": "/config",
+          "readOnly": true
+        }
+      ],
+      "logConfiguration": {
+        "logDriver": "awslogs",
+        "options": {
+          "awslogs-group": "/ecs/omni-voice-gpu-test",
+          "awslogs-region": "us-east-1",
+          "awslogs-stream-prefix": "worker"
+        }
+      },
+      "stopTimeout": 120
+    }
+  ],
+  "volumes": [
+    {
+      "name": "cache",
+      "host": {
+        "sourcePath": "/var/lib/omni-voice/cache"
+      }
+    },
+    {
+      "name": "config",
+      "host": {
+        "sourcePath": "/var/lib/omni-voice/config"
+      }
+    }
+  ]
+}

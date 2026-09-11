@@ -1,0 +1,83 @@
+﻿# Version control and local tooling
+.git
+**/.git
+.gitignore
+.agents
+.codex
+.idea
+.vscode
+
+# Local configuration and credentials (examples are not needed in images)
+.env
+.env.*
+**/.env
+**/.env.*
+**/.aws
+**/*.pem
+**/*.key
+**/*.p12
+**/*.pfx
+local-test.settings.json
+test-event.json
+
+# Python environments, dependencies, and packaging
+python scripts
+**/__pycache__
+**/*.py[cod]
+**/*.pyd
+**/.Python
+**/.venv
+**/.venv-*
+**/venv
+**/env
+**/.test-deps
+**/.local-deps
+**/build
+**/dist
+**/*.egg-info
+**/*.egg
+**/*.whl
+**/pip-wheel-metadata
+
+# Test, lint, notebook, and tool caches
+**/.pytest_cache
+**/.ruff_cache
+**/.mypy_cache
+**/.pyre
+**/.tox
+**/.nox
+**/.cache
+**/.ipynb_checkpoints
+**/.coverage
+**/.coverage.*
+**/coverage.xml
+**/htmlcov
+
+# Generated narration, voice references, model state, and debug artifacts
+**/output
+voice_samples
+**/*.wav
+**/*.safetensors
+**/*.xlsx
+**/*.jsonl
+**/*.log
+build_log*.txt
+**/*.tmp
+**/*.tmp.*
+
+# Development-only material
+sample.html
+Joane.html
+stories
+tests
+docs
+README.md
+**/*.ipynb
+
+# Editor backups and operating system metadata
+**/*.swp
+**/*.swo
+**/*~
+**/.DS_Store
+**/Thumbs.db
+**/Desktop.ini

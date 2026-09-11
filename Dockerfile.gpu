@@ -1,0 +1,11 @@
+FROM python:3.12-slim
+WORKDIR /app
+RUN apt-get update && apt-get install -y --no-install-recommends libsndfile1 ffmpeg && rm -rf /var/lib/apt/lists/*
+RUN pip install --no-cache-dir torch==2.8.0 torchaudio==2.8.0 --index-url https://download.pytorch.org/whl/cu128
+COPY requirements-gpu.txt .
+RUN pip install --no-cache-dir -r requirements-gpu.txt
+COPY generate_narration.py omni_voice.py omni_native.py speech_engine.py transcript_quality.py ./
+COPY storytelling.py story_audio.py narration_mastering.py spectral_matching.py worker_document.py lambda_function.py gpu_worker.py ./
+COPY narration_content ./narration_content
+ENV NARRATION_ENGINE=native NVIDIA_VISIBLE_DEVICES=all NVIDIA_DRIVER_CAPABILITIES=compute,utility
+CMD ["python", "-u", "gpu_worker.py", "--run"]

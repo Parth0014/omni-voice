@@ -1,0 +1,69 @@
+﻿# Local configuration and credentials
+.env
+.env.*
+!.env.example
+!.env.*.example
+/local-test.settings.json
+/test-event.json
+.aws/
+*.pem
+*.key
+*.p12
+*.pfx
+
+# Python environments, dependencies, and packaging
+/python scripts/
+__pycache__/
+*.py[cod]
+*.pyd
+.Python
+.venv/
+.venv-*/
+venv/
+env/
+.test-deps/
+.local-deps/
+build/
+dist/
+*.egg-info/
+*.egg
+*.whl
+pip-wheel-metadata/
+
+# Test, lint, notebook, and tool caches
+.pytest_cache/
+.ruff_cache/
+.mypy_cache/
+.pyre/
+.tox/
+.nox/
+.cache/
+.ipynb_checkpoints/
+.coverage
+.coverage.*
+coverage.xml
+htmlcov/
+
+# Generated narration, model state, and debug artifacts
+output/
+*.wav
+*.safetensors
+*.xlsx
+*.jsonl
+*.log
+/build_log*.txt
+*.tmp
+*.tmp.*
+
+# Local voice references and transcripts
+voice_samples/
+
+# Editors and operating systems
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
+.DS_Store
+Thumbs.db
+Desktop.ini
